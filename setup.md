@@ -26,15 +26,15 @@ conda --version
 ## 2. Clone this repository
 
 ```bash
-git clone https://github.com/flexfengfeng/dsai-m3-l06-learner.git
-cd dsai-m3-l06-learner
+git clone https://github.com/su-ntu-ctp/6m-data-3.6-Time-Series-Forecasting.git
+cd 6m-data-3.6-Time-Series-Forecasting
 ```
 
 ---
 
 ## 3. Create the conda environment
 
-From inside the `dsai-m3-l06-learner` folder:
+From inside the `6m-data-3.6-Time-Series-Forecasting` folder:
 
 ```bash
 conda env create -f environment.yml
