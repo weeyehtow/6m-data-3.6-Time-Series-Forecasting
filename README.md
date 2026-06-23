@@ -1,7 +1,7 @@
 # L06 — Time Series Forecasting
 
 > *Sarah Chen's sixth week at NorthStar Retail. Marcus's question from L05: "Sales are seasonal. Can you forecast next quarter's revenue?" This week she does.*
-> By the end of this lesson you will know how to decompose a time series into trend + seasonality + residual, build baseline forecasts with ETS, train a machine-learning forecaster with lag features, and evaluate any of them honestly using time-series cross-validation.
+> By the end of this lesson you will know how to decompose a time series into trend + seasonality + residual, build baseline forecasts with ETS, train a machine-learning forecaster with lag features, and evaluate any of them honestly with the right error metrics.
 
 ---
 
@@ -32,7 +32,7 @@
 - **Decompose** any time series into trend, seasonality, and residual using STL
 - **Build** baseline forecasts (Naive, Seasonal Naive, ETS / Exponential Smoothing)
 - **Build** an ML-based forecaster using lag features and a gradient boosting regressor
-- **Evaluate** forecasts with the right metrics (MAE, RMSE, MAPE) and the right cross-validation (TimeSeriesSplit, NOT k-fold)
+- **Evaluate** forecasts with the right metrics (MAE, RMSE, MAPE) — and never by shuffling time-ordered data
 - **Recognise** when each forecasting method is appropriate — and when forecasting itself is the wrong tool
 
 ---
@@ -67,7 +67,7 @@ You'll run `01_monday_morning.ipynb` to see NorthStar's daily revenue data + wat
 
 | # | Notebook | Sarah's day | What you explore |
 |---|---|---|---|
-| 02 | [`02_decomposition.ipynb`](./notebooks/02_decomposition.ipynb) | Tuesday | STL decomposition · trend · seasonality · residual · time-series cross-validation |
+| 02 | [`02_decomposition.ipynb`](./notebooks/02_decomposition.ipynb) | Tuesday | STL decomposition · trend · seasonality · residual |
 | 03 | [`03_classical_forecasting.ipynb`](./notebooks/03_classical_forecasting.ipynb) | Wednesday | Naive · Seasonal Naive · Exponential Smoothing (ETS) · MAE / RMSE / MAPE |
 | 04 | [`04_ml_forecasting.ipynb`](./notebooks/04_ml_forecasting.ipynb) | Thursday | Lag features · HistGradientBoosting regressor · model comparison · 90-day forecast |
 
@@ -89,9 +89,10 @@ Two domains: (A) UK electricity demand (highly seasonal); (B) coffee-shop daily 
 - STL decomposition (trend + seasonality + residual)
 - Exponential Smoothing / ETS — the pragmatic baseline
 - ML-based forecasting with lag features + gradient boosting
-- Time-series cross-validation + MAE / RMSE / MAPE
+- MAE / RMSE / MAPE error metrics
 
 **🟡 Optional (self-study, not assessed):**
+- Time-series cross-validation (TimeSeriesSplit / rolling-origin evaluation)
 - ARIMA + AutoARIMA
 - SARIMA (seasonal ARIMA)
 - ACF / PACF and stationarity tests
@@ -116,7 +117,7 @@ notebooks/
   data/
     northstar_daily_revenue.csv        ← 731 days (2024-01-01 to 2025-12-31)
   01_monday_morning.ipynb              ← Pre-class hook: see the seasonality
-  02_decomposition.ipynb               ← Part 1: STL + TS cross-validation
+  02_decomposition.ipynb               ← Part 1: STL decomposition
   03_classical_forecasting.ipynb       ← Part 2: Naive · Seasonal Naive · ETS
   04_ml_forecasting.ipynb              ← Part 3: Lag features + GB + comparison
   assignment.ipynb                     ← After class: electricity + coffee shop
