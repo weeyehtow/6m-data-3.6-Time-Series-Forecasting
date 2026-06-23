@@ -182,7 +182,7 @@ footer .stamp{font-style:normal;font-weight:300}
 .pull cite{color:rgba(255,255,255,.6)}
 /* Dark Q&A active state keeps contrast on navy */
 .qa.on{background:var(--ntu-navy)}
-.qa.on .a{color:rgba(255,255,255,.85);border-color:rgba(255,255,255,.3)}
+.qa.on .a,.qa.on .a b,.qa.on .a em,.qa.on .a .mono{color:rgba(255,255,255,.92);border-color:rgba(255,255,255,.3)}
 .qa.on .hint{color:#F5B5C0}
 .node.is-now{background:var(--ntu-crimson)}
 .bake th{background:var(--ntu-navy)}
@@ -214,7 +214,7 @@ footer .stamp{font-style:normal;font-weight:300}
     <div>
       <div class="label" style="color:var(--accent)">Chapter Six &middot; northstar_daily_revenue.csv</div>
       <h1>Today depends<br>on <em>yesterday.</em></h1>
-      <p class="cover-lede"><span class="dropcap">M</span>arcus's new brief: <em>sales are seasonal &mdash; can you forecast next quarter's revenue?</em> Sarah opens 731 rows: two years of daily revenue. The L01&ndash;L05 toolkit assumed rows were independent and shufflable. This week that assumption breaks. By Friday she will hold STL decomposition, a seasonal-naive baseline, an ETS model, an ML lag-feature model &mdash; and the only honest way to evaluate any of them: time-respecting cross-validation.</p>
+      <p class="cover-lede"><span class="dropcap">M</span>arcus's new brief: <em>sales are seasonal &mdash; can you forecast next quarter's revenue?</em> Sarah opens 731 rows: two years of daily revenue. The L01&ndash;L05 toolkit assumed rows were independent and shufflable. This week that assumption breaks. By Friday she will hold STL decomposition, a seasonal-naive baseline, an ETS model, an ML lag-feature model &mdash; and the discipline that ties them together: never evaluate a forecast on shuffled data.</p>
     </div>
     <div class="cover-side">
       <div class="fact-strip">
@@ -227,7 +227,7 @@ footer .stamp{font-style:normal;font-weight:300}
         <div><b>Sarah Chen</b><span class="label">Cust. Experience Analyst &middot; Jun 2023</span></div>
       </div>
       <hr class="rule-dot"/>
-      <div class="label" style="letter-spacing:.18em;font-style:italic;color:var(--ink-2)">Every figure is generated in-browser from a synthetic series.</div>
+      <div class="label" style="letter-spacing:.18em;font-style:italic;color:var(--ink-2)">The decomposition panels are illustrative (generated in-browser from a small synthetic series). The bake-off table below uses the real NorthStar notebook results &mdash; see the notebooks for full detail.</div>
     </div>
   </div>
 </section>
@@ -264,26 +264,26 @@ footer .stamp{font-style:normal;font-weight:300}
   <div class="bake">
     <table>
       <thead>
-        <tr><th>Model</th><th>MAE (&pound;)</th><th>RMSE (&pound;)</th><th>MAPE</th><th>Train</th><th>Decision</th></tr>
+        <tr><th>Model</th><th>What it does</th><th>MAE (&pound;)</th><th>RMSE (&pound;)</th><th>MAPE</th><th>Decision</th></tr>
       </thead>
       <tbody>
-        <tr><td class="name">Naive &middot; <em>yesterday</em></td><td class="m">820</td><td class="m">1,180</td><td class="m">7.4%</td><td>0.01s</td><td><span class="pill">floor</span></td></tr>
-        <tr><td class="name">Seasonal Naive &middot; <em>last week</em></td><td class="m">540</td><td class="m">780</td><td class="m">4.9%</td><td>0.01s</td><td><span class="pill">baseline</span></td></tr>
-        <tr><td class="name">ETS &middot; <em>Holt-Winters</em></td><td class="m">490</td><td class="m">720</td><td class="m">4.4%</td><td>2s</td><td><span class="pill">classical</span></td></tr>
-        <tr class="winner"><td class="name">GB + lag features</td><td class="m">410</td><td class="m">640</td><td class="m">3.7%</td><td>18s</td><td><span class="pill ship">SHIP</span></td></tr>
+        <tr><td class="name">Naive &middot; <em>yesterday</em></td><td>Repeats yesterday's value</td><td class="m">3,346</td><td class="m">3,758</td><td class="m">29.3%</td><td><span class="pill">floor</span></td></tr>
+        <tr><td class="name">Seasonal Naive &middot; <em>last week</em></td><td>Repeats the value from 7 days ago</td><td class="m">2,400</td><td class="m">2,873</td><td class="m">20.7%</td><td><span class="pill">baseline</span></td></tr>
+        <tr class="winner"><td class="name">ETS &middot; <em>Holt-Winters</em></td><td>Adaptive level + trend + weekly seasonality</td><td class="m">2,246</td><td class="m">2,692</td><td class="m">19.3%</td><td><span class="pill ship">SHIP</span></td></tr>
+        <tr><td class="name">GB + lag features</td><td>Gradient boosting on lag &amp; calendar features, forecast recursively</td><td class="m">2,438</td><td class="m">2,911</td><td class="m">21.0%</td><td><span class="pill">recursive</span></td></tr>
       </tbody>
     </table>
   </div>
-  <p class="bake-note">The booster wins on every metric, but seasonal-naive is right behind &mdash; 4.9% MAPE from a one-line model. Always show this row. The day a regulator or executive asks "is the fancy model worth it?", you want the answer in your back pocket.</p>
+  <p class="bake-note">On the real NorthStar 90-day holiday window, <strong>ETS-weekly is the most accurate</strong> &mdash; and the recursive ML booster actually trails both ETS and seasonal-naive, because a recursive forecast feeds its own errors back in over a long, hard window. The booster's real edge is <em>one-step, daily-retrain</em> forecasting (&asymp;&pound;1,400 MAE, 12% MAPE). Average across time-series cross-validation windows (an optional extension) and the three essentially tie. The lesson holds: never ship on a single split &mdash; always show the baseline row, and treat one bake-off as a starting point, not a verdict.</p>
 </section>
 
 <section id="s3">
   <div class="section-head">
     <div class="section-num">III.</div>
     <div class="section-title">
-      <div class="label">A discipline</div>
+      <div class="label">Optional &middot; Extension</div>
       <h2>Never <em>shuffle</em> a forecast.</h2>
-      <p class="deck">k-fold cross-validation puts future data in earlier test folds. The model looks better in your notebook than it ever will in production. <span class="mono">TimeSeriesSplit</span> walks forward; the test window always follows training.</p>
+      <p class="deck"><strong>Optional this run &mdash; explored in the extension notebook.</strong> k-fold cross-validation puts future data in earlier test folds, so the model looks better in your notebook than it ever will in production. <span class="mono">TimeSeriesSplit</span> walks forward; the test window always follows training.</p>
     </div>
   </div>
 
@@ -322,8 +322,8 @@ footer .stamp{font-style:normal;font-weight:300}
 
   <div class="honest">
     <div class="h-card"><div class="n">1</div><h4>Did you <em>decompose</em>?</h4><p>Look at trend, seasonal, residual before fitting anything. A pattern in the residual is a missed seasonality &mdash; every model downstream will inherit it.</p><span class="ex bad">&#10005; "Straight to gradient boosting."</span><span class="ex good">&#10003; "STL first; residual is white noise."</span></div>
-    <div class="h-card"><div class="n">2</div><h4>Did the <em>baseline</em> lose?</h4><p>Naive and seasonal naive must be on the table. If your ML can't beat them, ship the baseline &mdash; cheaper, simpler, equally honest.</p><span class="ex bad">&#10005; "GB hits MAPE 4.4%."</span><span class="ex good">&#10003; "GB 3.7% vs SNaive 4.9% &mdash; worth it."</span></div>
-    <div class="h-card"><div class="n">3</div><h4>Time-<em>respecting</em>?</h4><p>Use <span class="mono">TimeSeriesSplit</span>, report the last fold's metric, and quote a range &mdash; forecast uncertainty grows with the horizon.</p><span class="ex bad">&#10005; "5-fold CV gives RMSE 640."</span><span class="ex good">&#10003; "TSCV last fold &middot; RMSE 720 [CI 580&ndash;860]."</span></div>
+    <div class="h-card"><div class="n">2</div><h4>Did the <em>baseline</em> lose?</h4><p>Naive and seasonal naive must be on the table. If your ML can't beat them, ship the baseline &mdash; cheaper, simpler, equally honest.</p><span class="ex bad">&#10005; "GB hits MAPE 19%."</span><span class="ex good">&#10003; "ETS 19.3% vs SNaive 20.7% &mdash; marginal; ship the simpler one."</span></div>
+    <div class="h-card"><div class="n">3</div><h4>Judged on <em>more than one split</em>?</h4><p>A single window can flatter or punish any model &mdash; the holiday window did both here. Never shuffle a forecast; quote a range, and where you can, average across time-series CV windows (optional extension).</p><span class="ex bad">&#10005; "One holiday split &mdash; ship the booster."</span><span class="ex good">&#10003; "ETS edges it here; across windows they tie."</span></div>
   </div>
 </section>
 
@@ -338,7 +338,7 @@ footer .stamp{font-style:normal;font-weight:300}
     <div class="section-title">
       <div class="label">Check yourself</div>
       <h2>Nine questions from the <em>field notebook.</em></h2>
-      <p class="deck">Click to flip. Numbering matches <span class="mono">lesson.md</span>.</p>
+      <p class="deck">Click to flip. Adapted from <span class="mono">lesson.md</span>'s review questions.</p>
     </div>
   </div>
 
@@ -347,11 +347,10 @@ footer .stamp{font-style:normal;font-weight:300}
     <div class="qa" data-qn="Q2"><span class="hint">&#9656; Click to reveal</span><b>Why does STL plot four panels, not three?</b><div class="a">The fourth panel is the <em>original</em> series. STL plots: observed, trend, seasonal, residual &mdash; so you can verify trend + seasonal + residual &asymp; observed.</div></div>
     <div class="qa" data-qn="Q3"><span class="hint">&#9656; Click to reveal</span><b>Should you use STL on log-transformed data?</b><div class="a">If the seasonality grows with the level (multiplicative), yes &mdash; log-transform first, decompose, then exponentiate. STL itself assumes additive components.</div></div>
     <div class="qa" data-qn="Q4"><span class="hint">&#9656; Click to reveal</span><b>Seasonal Naive beats ETS on MAPE. What's happening?</b><div class="a">The series is dominated by stable seasonality with weak trend. SNaive captures the seasonality perfectly by just looking back one cycle. ETS adds parameters that didn't help here. Sometimes the simple baseline wins &mdash; that is a feature.</div></div>
-    <div class="qa" data-qn="Q5"><span class="hint">&#9656; Click to reveal</span><b>Why not just k-fold cross-validate a forecast model?</b><div class="a">k-fold puts some <em>future</em> training data in earlier test folds &mdash; leaking information that wouldn't be available in deployment. Use <span class="mono">TimeSeriesSplit</span>.</div></div>
-    <div class="qa" data-qn="Q6"><span class="hint">&#9656; Click to reveal</span><b>ETS converged poorly and gave a warning. Trust the forecast?</b><div class="a">Sometimes. Warnings often mean the data is too short, too noisy, or has structural breaks. Either get more data, switch to LightGBM with lags, or accept it if the held-out forecast is still good.</div></div>
-    <div class="qa" data-qn="Q7"><span class="hint">&#9656; Click to reveal</span><b>Train RMSE &pound;500, held-out RMSE &pound;2000. Diagnosis?</b><div class="a">Overfitting OR the test period is a different regime (e.g. holiday season). Inspect residuals: if systematically biased, the model isn't generalising. Try more regularisation, more lag features, or check the test period is genuinely different.</div></div>
-    <div class="qa" data-qn="Q8"><span class="hint">&#9656; Click to reveal</span><b>Scale lag features before HistGradientBoosting?</b><div class="a"><b>No.</b> Trees don't care about scale. (Neural networks do.) Skip scaling explicitly &mdash; don't forget it.</div></div>
-    <div class="qa" data-qn="Q9"><span class="hint">&#9656; Click to reveal</span><b>You have lag_1, lag_7, lag_30. Add lag_2, lag_3?</b><div class="a">Probably not. lag_1 already captures recent state; lag_2/3 are highly correlated with it. Stick with biologically meaningful lags: 1 (yesterday), 7 (last week), 30 (last month), 365 (last year).</div></div>
+    <div class="qa" data-qn="Q5"><span class="hint">&#9656; Click to reveal</span><b>ETS converged poorly and gave a warning. Trust the forecast?</b><div class="a">Sometimes. Warnings often mean the data is too short, too noisy, or has structural breaks. Either get more data, switch to the gradient-boosting lag-feature model (HistGradientBoosting, as in the notebook), or accept it if the held-out forecast is still good.</div></div>
+    <div class="qa" data-qn="Q6"><span class="hint">&#9656; Click to reveal</span><b>Train RMSE &pound;500, held-out RMSE &pound;2000. Diagnosis?</b><div class="a">Overfitting OR the test period is a different regime (e.g. holiday season). Inspect residuals: if systematically biased, the model isn't generalising. Try more regularisation, more lag features, or check the test period is genuinely different.</div></div>
+    <div class="qa" data-qn="Q7"><span class="hint">&#9656; Click to reveal</span><b>Scale lag features before HistGradientBoosting?</b><div class="a"><b>No.</b> Trees don't care about scale. (Neural networks do.) Skip scaling explicitly &mdash; don't forget it.</div></div>
+    <div class="qa" data-qn="Q8"><span class="hint">&#9656; Click to reveal</span><b>You have lag_1, lag_7, lag_30. Add lag_2, lag_3?</b><div class="a">Probably not. lag_1 already captures recent state; lag_2/3 are highly correlated with it. Stick with biologically meaningful lags: 1 (yesterday), 7 (last week), 30 (last month), 365 (last year).</div></div>
   </div>
 </section>
 
